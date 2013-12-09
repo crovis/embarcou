@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.embarcou.model;
+package com.embarcou.model.DAO;
 
+import com.embarcou.model.Viacao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,41 +17,31 @@ import javax.persistence.Persistence;
 public class ViacaoDAO {
     
     
-    public static void inserir(Viacao viacao){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static void inserir(Viacao viacao){ 
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         em.getTransaction().begin();
         em.persist(viacao);
         em.getTransaction().commit();
     
     }
     
-    public static List<Viacao> findAll(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static List<Viacao> findAll(){      
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Viacao.findAll").getResultList();
     }
     
-    public static List<Viacao> findbyName(String nome){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static List<Viacao> findbyName(String nome){  
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Viacao.findByNome").setParameter("nome", nome).getResultList();
     }
     
     public static List<Viacao> findbyId(int id){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Viacao.findById").setParameter("id", id).getResultList();
     }
 
     public static boolean removeById(int id) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         List<Viacao> viacao =  em.createNamedQuery("Viacao.findById").setParameter("id", id).getResultList();
         
         if(viacao.isEmpty()){
@@ -64,10 +55,8 @@ public class ViacaoDAO {
         return true;
     }
 
-    public static void update(int id, String nome, String telefone, String site, String cnpj) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static void update(int id, String nome, String telefone, String site, String cnpj) { 
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         em.getTransaction().begin();
         
         Viacao viacao = em.find(Viacao.class, id);
@@ -82,10 +71,8 @@ public class ViacaoDAO {
         em.getTransaction().commit();
     }
 
-    public static void inserir(String nome, String cnpj, String telefone, String site) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static void inserir(String nome, String cnpj, String telefone, String site) {      
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         Viacao viacao = new Viacao();
         
         viacao.setCnpj(cnpj);

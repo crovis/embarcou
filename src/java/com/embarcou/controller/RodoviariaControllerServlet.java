@@ -5,12 +5,9 @@
 package com.embarcou.controller;
 
 import com.embarcou.model.Rodoviaria;
-import com.embarcou.model.RodoviariaDAO;
+import com.embarcou.model.DAO.RodoviariaDAO;
 import java.io.IOException;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -9,23 +9,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.embarcou.model.Pesquisa;
-import com.embarcou.model.PesquisaDAO;
+import com.embarcou.model.DAO.PesquisaDAO;
 import com.embarcou.model.Rodoviaria;
-import com.embarcou.model.RodoviariaDAO;
+import com.embarcou.model.DAO.RodoviariaDAO;
 import com.embarcou.model.Trecho;
-import com.embarcou.model.TrechoDAO;
+import com.embarcou.model.DAO.TrechoDAO;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -43,9 +40,7 @@ public class BuscarControllerServlet extends HttpServlet {
             throws ServletException, IOException, ParseException {
         
         //response.setContentType("text/html;charset=UTF-8");        
-
         inserirPesquisa(request, response);
-
         request.getRequestDispatcher("buscar.jsp").forward(request, response);
         
     }
@@ -101,15 +96,21 @@ public class BuscarControllerServlet extends HttpServlet {
     
     private void inserirPesquisa(HttpServletRequest request, HttpServletResponse response) throws ParseException{
         
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
         int dia_semana;
-        
+        Date data;
+        String origem, destino;
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date data = formatter.parse(request.getParameter("data"));
-        String origem = request.getParameter("origem");
-        String destino = request.getParameter("destino");
         
+        origem = request.getParameter("origem");
+        destino = request.getParameter("destino");
+        
+        if(!expressionData(request.getParameter("data")))
+        {
+            data = new Date();
+        } else {
+            data = formatter.parse(request.getParameter("data"));
+        }
+
         
         Pesquisa pesquisa = new Pesquisa(origem, destino, data);
         PesquisaDAO.insert(pesquisa);
@@ -123,16 +124,33 @@ public class BuscarControllerServlet extends HttpServlet {
         List <Rodoviaria> rodoviaria_origem = RodoviariaDAO.findByNome(origem);
         List <Rodoviaria> rodoviaria_destino =  RodoviariaDAO.findByNome(destino);
         
-        if(rodoviaria_origem.isEmpty() || rodoviaria_destino.isEmpty()){
-            //DO NOTHING
+        if(rodoviaria_origem.isEmpty() || rodoviaria_destino.isEmpty()) {
+            request.setAttribute("msgBusca", "<div class=\"alert alert-warning\">Origem e destino não encontradas</div>");
         } else {
-            Calendar c = Calendar.getInstance();
-            c.setTime(pesquisa.getData());
-            dia_semana = c.get(Calendar.DAY_OF_WEEK);
-
-            List<Trecho> trechos = TrechoDAO.findDayOfWeek(dia_semana, rodoviaria_origem.get(0).getNome(), rodoviaria_destino.get(0).getNome());
-            request.setAttribute("trechos", trechos);
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+	    Date data_atual = new Date();
             
+            System.out.println(dateFormat.format(data_atual) + "    " +  dateFormat.format(pesquisa.getData()));
+            
+            if(pesquisa.getData().before(data_atual) && !dateFormat.format(pesquisa.getData()).equals(dateFormat.format(data_atual))){
+                request.setAttribute("msgBusca", "<div class=\"alert alert-warning\">Não foram encontradas passagens para esse dia</div>");
+            } else {
+                
+                Calendar c = Calendar.getInstance();
+                c.setTime(pesquisa.getData());
+                dia_semana = c.get(Calendar.DAY_OF_WEEK);
+                List<Trecho> trechos = TrechoDAO.findDayOfWeek(dia_semana, rodoviaria_origem.get(0).getNome(), rodoviaria_destino.get(0).getNome());
+                request.setAttribute("trechos", trechos);
+                if(trechos.isEmpty()){
+                    request.setAttribute("msgBusca", "<div class=\"alert alert-warning\">Não foram encontradas passagens para esse dia</div>");
+                }
+            }
         }
+    }
+    
+    private boolean expressionData(String data){
+        
+        return data.matches("\\d{2}-\\d{2}-\\d{4}");
+        
     }
 }

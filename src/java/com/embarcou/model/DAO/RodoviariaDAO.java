@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.embarcou.model;
+package com.embarcou.model.DAO;
 
+import com.embarcou.model.Rodoviaria;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
@@ -15,24 +15,18 @@ import javax.persistence.Persistence;
  */
 public class RodoviariaDAO {
     
-    public static List<Rodoviaria> findAll(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static List<Rodoviaria> findAll() {
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Rodoviaria.findAll").getResultList();
     }
     
-    public static List<Rodoviaria> findByNome(String nome){
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+    public static List<Rodoviaria> findByNome(String nome) {  
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Rodoviaria.findByNome").setParameter("nome", nome).getResultList();
     }
     
     public static boolean insert(String nome){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         Rodoviaria rodoviaria = new Rodoviaria(nome);
 
         em.getTransaction().begin();
@@ -42,9 +36,7 @@ public class RodoviariaDAO {
     }
     
     public static boolean remove(int id){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         List<Rodoviaria> rodoviaria =  em.createNamedQuery("Rodoviaria.findById").setParameter("id", id).getResultList();
         
         if(rodoviaria.isEmpty()){

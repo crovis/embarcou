@@ -1,7 +1,7 @@
 package com.embarcou.controller;
 
 import com.embarcou.model.Viacao;
-import com.embarcou.model.ViacaoDAO;
+import com.embarcou.model.DAO.ViacaoDAO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;

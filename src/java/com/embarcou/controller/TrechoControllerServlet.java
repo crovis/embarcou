@@ -5,11 +5,11 @@
 package com.embarcou.controller;
 
 import com.embarcou.model.Rodoviaria;
-import com.embarcou.model.RodoviariaDAO;
+import com.embarcou.model.DAO.RodoviariaDAO;
 import com.embarcou.model.Trecho;
-import com.embarcou.model.TrechoDAO;
+import com.embarcou.model.DAO.TrechoDAO;
 import com.embarcou.model.Viacao;
-import com.embarcou.model.ViacaoDAO;
+import com.embarcou.model.DAO.ViacaoDAO;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -46,7 +46,14 @@ public class TrechoControllerServlet extends HttpServlet {
             removerTrechos(request, response);
             listarTrechos(request, response);
         }
-        else {
+        else if(request.getRequestURI().endsWith("/editar"))
+        {
+            if(editartrecho(request, response) == 0){
+                listarTrechos(request, response);
+            } else {
+                request.getRequestDispatcher("editar.jsp").forward(request, response);
+            }
+        } else {
             listarTrechos(request, response);
         }
     }
@@ -83,7 +90,7 @@ public class TrechoControllerServlet extends HttpServlet {
         
         List<Trecho> trechos = TrechoDAO.findAll();
         request.setAttribute("trechos", trechos);
-        
+        //
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
@@ -170,7 +177,21 @@ public class TrechoControllerServlet extends HttpServlet {
             request.setAttribute("removeMsg", "<div class=\"alert alert-success\"><p>Trecho removido com sucesso!</p></div>");
         } else {
              request.setAttribute("removeMsg", "<div class=\"alert alert-danger\"><p>Trecho não foi removido!</p></div>");
-        }  
+        }
        
+    }
+
+    private int editartrecho(HttpServletRequest request, HttpServletResponse response) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        
+        List<Trecho> trecho = TrechoDAO.findById(id);
+        
+        if(trecho.isEmpty()){
+            request.setAttribute("msgEdit", "<div class=\"alert alert-success\"><p>Trecho não existe!</p></div>");
+            return 0;
+        }
+        
+        request.setAttribute("trecho", trecho.get(0));
+        return 1;
     }
 }

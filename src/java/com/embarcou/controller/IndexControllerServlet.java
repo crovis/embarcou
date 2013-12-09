@@ -6,7 +6,7 @@ package com.embarcou.controller;
 
 import com.embarcou.model.Pesquisa;
 import com.embarcou.model.Rodoviaria;
-import com.embarcou.model.RodoviariaDAO;
+import com.embarcou.model.DAO.RodoviariaDAO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.embarcou.model.Pesquisa;
-import com.embarcou.model.PesquisaDAO;
+import com.embarcou.model.DAO.PesquisaDAO;
 
 /**
  *

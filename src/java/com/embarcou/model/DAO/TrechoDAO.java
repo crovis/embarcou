@@ -1,5 +1,6 @@
-package com.embarcou.model;
+package com.embarcou.model.DAO;
 
+import com.embarcou.model.Trecho;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,25 +13,19 @@ import javax.persistence.Persistence;
 public class TrechoDAO {
     
     public static List<Trecho> findAll(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Trecho.findAll").getResultList();
         
     }
     
     public static List<Trecho> findById(int id){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         return em.createNamedQuery("Trecho.findById").setParameter("id", id).getResultList();
         
     }
     
     public static boolean removeById(int id){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         List <Trecho> trechos = em.createNamedQuery("Trecho.findById").setParameter("id", id).getResultList();
         
         if(trechos.isEmpty()){
@@ -48,10 +43,7 @@ public class TrechoDAO {
     }
     
     public static List<Trecho> findDayOfWeek(int diaSemana, String origem, String destino){
-    
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         List<Trecho> trechos = null;
             
         switch(diaSemana){

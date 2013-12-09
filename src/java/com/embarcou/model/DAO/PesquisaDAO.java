@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.embarcou.model;
+package com.embarcou.model.DAO;
 
-import java.util.Date;
+import com.embarcou.model.Pesquisa;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
@@ -18,10 +13,7 @@ import javax.persistence.Query;
 public class PesquisaDAO {
 
     public static boolean insert(Pesquisa pesquisa) {
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         em.getTransaction().begin();
         em.persist(pesquisa);
         em.getTransaction().commit();
@@ -31,9 +23,7 @@ public class PesquisaDAO {
     }
     
     public static List<Pesquisa> findAllOrderBy(int page){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmbarcouPU");
-        EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = Persistence.createEntityManagerFactory("EmbarcouPU").createEntityManager();
         Query query = em.createNamedQuery("Pesquisa.findAllOrderBy");
         
         List <Pesquisa> pesquisas = query.setFirstResult(10*(Math.abs(page-1)))
